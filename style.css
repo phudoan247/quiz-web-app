@@ -321,6 +321,62 @@ h2 {
   background: #334155;
 }
 
+/* Leaderboard */
+.leaderboard {
+  border-top: 1px solid #334155;
+  padding-top: 1rem;
+}
+
+.leaderboard-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.leaderboard-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.leaderboard-item.current {
+  border-color: #a855f7;
+  background: #1e1040;
+}
+
+.lb-rank {
+  font-weight: 800;
+  color: #a855f7;
+  min-width: 2rem;
+}
+
+.lb-info {
+  color: #cbd5e1;
+}
+
+.leaderboard-empty {
+  color: #64748b;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .answers-grid {
