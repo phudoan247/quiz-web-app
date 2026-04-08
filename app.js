@@ -188,6 +188,58 @@ function nextQuestion() {
   }
 }
 
+// Leaderboard — localStorage (scores only, no personal data)
+const LEADERBOARD_KEY = "quiz_leaderboard";
+const LEADERBOARD_MAX = 10;
+
+function loadLeaderboard() {
+  try {
+    return JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveToLeaderboard(score, accuracy, elapsed) {
+  const id = Date.now();
+  const entries = loadLeaderboard();
+  entries.push({ id, score, accuracy, elapsed });
+  entries.sort((a, b) => b.score - a.score);
+  const trimmed = entries.slice(0, LEADERBOARD_MAX);
+  try {
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(trimmed));
+  } catch {
+    // Storage unavailable (e.g. private browsing) — continue without saving
+  }
+  return { entries: trimmed, currentId: id };
+}
+
+function renderLeaderboard(entries, currentId) {
+  const list = document.getElementById("leaderboard-list");
+  list.innerHTML = "";
+  if (entries.length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "leaderboard-empty";
+    empty.textContent = "No scores yet — you're the first!";
+    list.appendChild(empty);
+    return;
+  }
+  entries.forEach((entry, i) => {
+    const li = document.createElement("li");
+    li.className =
+      "leaderboard-item" + (entry.id === currentId ? " current" : "");
+    const rank = document.createElement("span");
+    rank.className = "lb-rank";
+    rank.textContent = `#${i + 1}`;
+    const info = document.createElement("span");
+    info.className = "lb-info";
+    info.textContent = `${entry.score} pts · ${entry.accuracy}% · ${entry.elapsed}s`;
+    li.appendChild(rank);
+    li.appendChild(info);
+    list.appendChild(li);
+  });
+}
+
 function getPerformanceMessage(accuracy) {
   if (accuracy === 100) return { emoji: "🏆", message: "Perfect Score!" };
   if (accuracy >= 80) return { emoji: "🎉", message: "Great Job!" };
@@ -210,6 +262,13 @@ function showResults() {
   document.getElementById("final-time").textContent = `${elapsed}s`;
   document.getElementById("correct-count").textContent = state.correctCount;
   document.getElementById("wrong-count").textContent = wrongCount;
+
+  const { entries, currentId } = saveToLeaderboard(
+    state.score,
+    accuracy,
+    elapsed,
+  );
+  renderLeaderboard(entries, currentId);
 
   showScreen("results-screen");
 }
