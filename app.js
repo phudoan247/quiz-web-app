@@ -146,11 +146,11 @@ function renderAnswers(q) {
 
 function updateProgressBar() {
   const total = state.questions.length;
-  const answered = state.currentIndex;
-  const pct = (answered / total) * 100;
+  const current = state.currentIndex + 1;
+  const pct = (current / total) * 100;
   document.getElementById("progress-bar").style.width = `${pct}%`;
   document.getElementById("progress-label").textContent =
-    `${answered} / ${total}`;
+    `${current} / ${total}`;
 }
 
 function renderQuestion() {
