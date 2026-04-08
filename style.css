@@ -461,6 +461,68 @@ h2 {
   padding: 0.5rem;
 }
 
+/* Animations */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes flash {
+  0%,
+  100% {
+    background: #14532d;
+  }
+  50% {
+    background: #22c55e;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.answer-btn.shake {
+  animation: shake 0.4s ease;
+}
+
+.answer-btn.flash {
+  animation: flash 0.5s ease;
+}
+
+.card.slide-in {
+  animation: slideIn 0.3s ease;
+}
+
+/* Confetti canvas */
+.confetti-canvas {
+  display: none;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .answers-grid {
