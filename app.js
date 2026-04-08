@@ -11,6 +11,8 @@ const CONFIG = {
   STREAK_3X: 5,
 };
 
+let confettiFrame = null;
+
 const state = {
   questions: [],
   currentIndex: 0,
@@ -45,7 +47,16 @@ function getTimerSeconds() {
   return (DIFFICULTY[state.difficulty] ?? DIFFICULTY.easy).seconds;
 }
 
+function stopConfetti() {
+  if (confettiFrame) {
+    cancelAnimationFrame(confettiFrame);
+    confettiFrame = null;
+    document.getElementById("confetti-canvas").style.display = "none";
+  }
+}
+
 function startQuiz() {
+  stopConfetti();
   state.questions = shuffle(QUESTIONS);
   state.currentIndex = 0;
   state.score = 0;
@@ -160,7 +171,6 @@ function launchConfetti(accuracy) {
     tiltSpeed: Math.random() * 0.1 + 0.05,
   }));
 
-  let frame;
   let elapsed = 0;
 
   function draw() {
@@ -181,10 +191,10 @@ function launchConfetti(accuracy) {
     });
     elapsed++;
     if (elapsed < 180) {
-      frame = requestAnimationFrame(draw);
+      confettiFrame = requestAnimationFrame(draw);
     } else {
       canvas.style.display = "none";
-      cancelAnimationFrame(frame);
+      confettiFrame = null;
     }
   }
   draw();
