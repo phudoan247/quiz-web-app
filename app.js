@@ -201,15 +201,20 @@ function loadLeaderboard() {
 }
 
 function saveToLeaderboard(score, accuracy, elapsed) {
+  const id = Date.now();
   const entries = loadLeaderboard();
-  entries.push({ score, accuracy, elapsed });
+  entries.push({ id, score, accuracy, elapsed });
   entries.sort((a, b) => b.score - a.score);
   const trimmed = entries.slice(0, LEADERBOARD_MAX);
-  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(trimmed));
-  return trimmed;
+  try {
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(trimmed));
+  } catch {
+    // Storage unavailable (e.g. private browsing) — continue without saving
+  }
+  return { entries: trimmed, currentId: id };
 }
 
-function renderLeaderboard(entries, currentScore) {
+function renderLeaderboard(entries, currentId) {
   const list = document.getElementById("leaderboard-list");
   list.innerHTML = "";
   if (entries.length === 0) {
@@ -222,11 +227,7 @@ function renderLeaderboard(entries, currentScore) {
   entries.forEach((entry, i) => {
     const li = document.createElement("li");
     li.className =
-      "leaderboard-item" +
-      (entry.score === currentScore &&
-      i === entries.findIndex((e) => e.score === currentScore)
-        ? " current"
-        : "");
+      "leaderboard-item" + (entry.id === currentId ? " current" : "");
     const rank = document.createElement("span");
     rank.className = "lb-rank";
     rank.textContent = `#${i + 1}`;
@@ -262,8 +263,12 @@ function showResults() {
   document.getElementById("correct-count").textContent = state.correctCount;
   document.getElementById("wrong-count").textContent = wrongCount;
 
-  const entries = saveToLeaderboard(state.score, accuracy, elapsed);
-  renderLeaderboard(entries, state.score);
+  const { entries, currentId } = saveToLeaderboard(
+    state.score,
+    accuracy,
+    elapsed,
+  );
+  renderLeaderboard(entries, currentId);
 
   showScreen("results-screen");
 }
