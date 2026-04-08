@@ -19,6 +19,8 @@ All game settings live in a `CONFIG` object at the top of app.js:
 
 - `TIMER_SECONDS` — countdown per question (default 15)
 - `POINTS_PER_QUESTION` — base points (default 10)
+- `STREAK_2X` — streak length for 2x multiplier (default 3)
+- `STREAK_3X` — streak length for 3x multiplier (default 5)
 
 ## Coding Conventions
 

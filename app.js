@@ -1,6 +1,8 @@
 const CONFIG = {
   TIMER_SECONDS: 15,
   POINTS_PER_QUESTION: 10,
+  STREAK_2X: 3,
+  STREAK_3X: 5,
 };
 
 const state = {
@@ -8,6 +10,7 @@ const state = {
   currentIndex: 0,
   score: 0,
   correctCount: 0,
+  streak: 0,
   startTime: null,
   timerInterval: null,
   timeLeft: CONFIG.TIMER_SECONDS,
@@ -36,9 +39,31 @@ function startQuiz() {
   state.currentIndex = 0;
   state.score = 0;
   state.correctCount = 0;
+  state.streak = 0;
   state.startTime = Date.now();
   showScreen("quiz-screen");
   renderQuestion();
+}
+
+function getMultiplier() {
+  if (state.streak >= CONFIG.STREAK_3X) return 3;
+  if (state.streak >= CONFIG.STREAK_2X) return 2;
+  return 1;
+}
+
+function updateStreakDisplay() {
+  const badge = document.getElementById("streak-badge");
+  if (state.streak >= CONFIG.STREAK_2X) {
+    const multiplier = getMultiplier();
+    badge.textContent = `🔥 ${state.streak} streak (${multiplier}x)`;
+    badge.className = "streak-badge active";
+  } else if (state.streak > 0) {
+    badge.textContent = `🔥 ${state.streak} streak`;
+    badge.className = "streak-badge building";
+  } else {
+    badge.textContent = "";
+    badge.className = "streak-badge";
+  }
 }
 
 function startTimer() {
@@ -77,6 +102,8 @@ function handleTimeout() {
   buttons.forEach((btn) => (btn.disabled = true));
   const q = state.questions[state.currentIndex];
   buttons[q.correct].classList.add("correct");
+  state.streak = 0;
+  updateStreakDisplay();
   setTimeout(nextQuestion, 900);
 }
 
@@ -111,6 +138,7 @@ function renderQuestion() {
   document.getElementById("question-counter").textContent =
     `Question ${state.currentIndex + 1} / ${total}`;
   updateScoreDisplay();
+  updateStreakDisplay();
   document.getElementById("question-text").textContent = q.question;
   renderAnswers(q);
   startTimer();
@@ -130,11 +158,21 @@ function handleAnswer(selectedIndex) {
   buttons[q.correct].classList.add("correct");
   if (!isCorrect) {
     buttons[selectedIndex].classList.add("wrong");
+    state.streak = 0;
+    updateStreakDisplay();
   } else {
-    state.score += CONFIG.POINTS_PER_QUESTION;
+    state.streak++;
+    const multiplier = getMultiplier();
+    const points = CONFIG.POINTS_PER_QUESTION * multiplier;
+    state.score += points;
     state.correctCount++;
     updateScoreDisplay();
-    showScorePopup(`+${CONFIG.POINTS_PER_QUESTION}`);
+    updateStreakDisplay();
+    const popupText =
+      multiplier > 1
+        ? `+${points} x${multiplier}`
+        : `+${CONFIG.POINTS_PER_QUESTION}`;
+    showScorePopup(popupText);
   }
 
   // Advance after short delay

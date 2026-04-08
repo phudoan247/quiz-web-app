@@ -58,6 +58,35 @@ h1 {
   font-size: 1.1rem;
 }
 
+/* Streak badge */
+.streak-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-height: 1.5rem;
+  text-align: center;
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.streak-badge.building {
+  color: #f59e0b;
+}
+
+.streak-badge.active {
+  color: #ef4444;
+  animation: pulse 0.6s ease;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
 /* Quiz header */
 .quiz-header {
   display: flex;
