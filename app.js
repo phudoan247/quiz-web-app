@@ -11,6 +11,8 @@ const CONFIG = {
   STREAK_3X: 5,
 };
 
+let confettiFrame = null;
+
 const state = {
   questions: [],
   currentIndex: 0,
@@ -45,7 +47,16 @@ function getTimerSeconds() {
   return (DIFFICULTY[state.difficulty] ?? DIFFICULTY.easy).seconds;
 }
 
+function stopConfetti() {
+  if (confettiFrame) {
+    cancelAnimationFrame(confettiFrame);
+    confettiFrame = null;
+    document.getElementById("confetti-canvas").style.display = "none";
+  }
+}
+
 function startQuiz() {
+  stopConfetti();
   state.questions = shuffle(QUESTIONS);
   state.currentIndex = 0;
   state.score = 0;
@@ -132,6 +143,63 @@ function showScorePopup(text) {
   setTimeout(() => popup.classList.remove("visible"), 700);
 }
 
+// --- Animations ---
+
+function animateCardIn() {
+  const card = document.querySelector("#quiz-screen .card");
+  card.classList.remove("slide-in");
+  void card.offsetWidth; // force reflow to restart animation
+  card.classList.add("slide-in");
+}
+
+function launchConfetti(accuracy) {
+  if (accuracy < 40) return;
+  const canvas = document.getElementById("confetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = "block";
+
+  const pieces = Array.from({ length: 120 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * -canvas.height,
+    r: Math.random() * 6 + 3,
+    d: Math.random() * 80 + 20,
+    color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+    tilt: Math.random() * 10 - 5,
+    tiltAngle: 0,
+    tiltSpeed: Math.random() * 0.1 + 0.05,
+  }));
+
+  let elapsed = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach((p) => {
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, p.r, p.r / 2, p.tilt, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+      p.y += Math.cos(p.d) + 2;
+      p.x += Math.sin(elapsed / 30) * 1.5;
+      p.tiltAngle += p.tiltSpeed;
+      p.tilt = Math.sin(p.tiltAngle) * 12;
+      if (p.y > canvas.height) {
+        p.y = -10;
+        p.x = Math.random() * canvas.width;
+      }
+    });
+    elapsed++;
+    if (elapsed < 180) {
+      confettiFrame = requestAnimationFrame(draw);
+    } else {
+      canvas.style.display = "none";
+      confettiFrame = null;
+    }
+  }
+  draw();
+}
+
 function renderAnswers(q) {
   const grid = document.getElementById("answers-grid");
   grid.innerHTML = "";
@@ -164,6 +232,7 @@ function renderQuestion() {
   updateProgressBar();
   document.getElementById("question-text").textContent = q.question;
   renderAnswers(q);
+  animateCardIn();
   startTimer();
 }
 
@@ -177,13 +246,14 @@ function handleAnswer(selectedIndex) {
 
   const isCorrect = selectedIndex === q.correct;
 
-  // Highlight correct and wrong
+  // Highlight correct and wrong + animations
   buttons[q.correct].classList.add("correct");
   if (!isCorrect) {
-    buttons[selectedIndex].classList.add("wrong");
+    buttons[selectedIndex].classList.add("wrong", "shake");
     state.streak = 0;
     updateStreakDisplay();
   } else {
+    buttons[q.correct].classList.add("flash");
     state.streak++;
     const multiplier = getMultiplier();
     const points = CONFIG.POINTS_PER_QUESTION * multiplier;
@@ -294,6 +364,7 @@ function showResults() {
   renderLeaderboard(entries, currentId);
 
   showScreen("results-screen");
+  launchConfetti(accuracy);
 }
 
 function init() {
