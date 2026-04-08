@@ -13,6 +13,55 @@ const CONFIG = {
 
 let confettiFrame = null;
 
+// --- Audio (Web Audio API) ---
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new AudioContext();
+  return audioCtx;
+}
+
+function playTone(frequency, type, startTime, duration, gainValue = 0.3) {
+  const ctx = getAudioCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.type = type;
+  osc.frequency.setValueAtTime(frequency, startTime);
+  gain.gain.setValueAtTime(gainValue, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+}
+
+function soundCorrect() {
+  const ctx = getAudioCtx();
+  const t = ctx.currentTime;
+  playTone(523, "sine", t, 0.15);
+  playTone(659, "sine", t + 0.1, 0.2);
+}
+
+function soundWrong() {
+  const ctx = getAudioCtx();
+  const t = ctx.currentTime;
+  playTone(220, "sawtooth", t, 0.15, 0.2);
+  playTone(180, "sawtooth", t + 0.12, 0.2, 0.15);
+}
+
+function soundTick() {
+  const ctx = getAudioCtx();
+  playTone(880, "square", ctx.currentTime, 0.05, 0.1);
+}
+
+function soundFanfare() {
+  const ctx = getAudioCtx();
+  const t = ctx.currentTime;
+  [523, 659, 784, 1047].forEach((freq, i) => {
+    playTone(freq, "sine", t + i * 0.12, 0.3, 0.25);
+  });
+}
+
 const state = {
   questions: [],
   currentIndex: 0,
@@ -101,6 +150,8 @@ function startTimer() {
     if (state.timeLeft <= 0) {
       clearTimer();
       handleTimeout();
+    } else if (state.timeLeft <= 5) {
+      soundTick();
     }
   }, 1000);
 }
@@ -250,10 +301,12 @@ function handleAnswer(selectedIndex) {
   buttons[q.correct].classList.add("correct");
   if (!isCorrect) {
     buttons[selectedIndex].classList.add("wrong", "shake");
+    soundWrong();
     state.streak = 0;
     updateStreakDisplay();
   } else {
     buttons[q.correct].classList.add("flash");
+    soundCorrect();
     state.streak++;
     const multiplier = getMultiplier();
     const points = CONFIG.POINTS_PER_QUESTION * multiplier;
@@ -365,6 +418,7 @@ function showResults() {
 
   showScreen("results-screen");
   launchConfetti(accuracy);
+  if (accuracy >= 40) soundFanfare();
 }
 
 function init() {
