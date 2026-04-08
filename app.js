@@ -32,14 +32,24 @@ function startQuiz() {
   renderQuestion();
 }
 
+function updateScoreDisplay() {
+  document.getElementById('score-display').textContent = `Score: ${state.score}`;
+}
+
+function showScorePopup(text) {
+  const popup = document.getElementById('score-popup');
+  popup.textContent = text;
+  popup.classList.add('visible');
+  setTimeout(() => popup.classList.remove('visible'), 700);
+}
+
 function renderQuestion() {
   const q = state.questions[state.currentIndex];
   const total = state.questions.length;
 
   document.getElementById('question-counter').textContent =
     `Question ${state.currentIndex + 1} / ${total}`;
-  document.getElementById('score-display').textContent =
-    `Score: ${state.score}`;
+  updateScoreDisplay();
   document.getElementById('question-text').textContent = q.question;
 
   const grid = document.getElementById('answers-grid');
@@ -70,6 +80,8 @@ function handleAnswer(selectedIndex) {
   } else {
     state.score += 10;
     state.correctCount++;
+    updateScoreDisplay();
+    showScorePopup('+10');
   }
 
   // Advance after short delay
