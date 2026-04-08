@@ -20,7 +20,7 @@ const state = {
   difficulty: "easy",
   startTime: null,
   timerInterval: null,
-  timeLeft: CONFIG.TIMER_SECONDS,
+  timeLeft: DIFFICULTY.easy.seconds,
 };
 
 // Screen management
@@ -42,7 +42,7 @@ function shuffle(arr) {
 }
 
 function getTimerSeconds() {
-  return DIFFICULTY[state.difficulty].seconds;
+  return (DIFFICULTY[state.difficulty] ?? DIFFICULTY.easy).seconds;
 }
 
 function startQuiz() {
