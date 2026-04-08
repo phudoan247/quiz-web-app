@@ -150,15 +150,28 @@ function nextQuestion() {
   }
 }
 
+function getPerformanceMessage(accuracy) {
+  if (accuracy === 100) return { emoji: "🏆", message: "Perfect Score!" };
+  if (accuracy >= 80) return { emoji: "🎉", message: "Great Job!" };
+  if (accuracy >= 60) return { emoji: "👍", message: "Good Effort!" };
+  if (accuracy >= 40) return { emoji: "📚", message: "Keep Practicing!" };
+  return { emoji: "💪", message: "Don't Give Up!" };
+}
+
 function showResults() {
   const elapsed = Math.round((Date.now() - state.startTime) / 1000);
-  const accuracy = Math.round(
-    (state.correctCount / state.questions.length) * 100,
-  );
+  const total = state.questions.length;
+  const accuracy = Math.round((state.correctCount / total) * 100);
+  const wrongCount = total - state.correctCount;
+  const { emoji, message } = getPerformanceMessage(accuracy);
 
+  document.getElementById("result-emoji").textContent = emoji;
+  document.getElementById("result-message").textContent = message;
   document.getElementById("final-score").textContent = state.score;
   document.getElementById("final-accuracy").textContent = `${accuracy}%`;
   document.getElementById("final-time").textContent = `${elapsed}s`;
+  document.getElementById("correct-count").textContent = state.correctCount;
+  document.getElementById("wrong-count").textContent = wrongCount;
 
   showScreen("results-screen");
 }
