@@ -192,6 +192,29 @@ h1 {
   transform: translateY(-0.5rem);
 }
 
+/* Progress bar */
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #6366f1;
+  border-radius: 9999px;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.progress-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+}
+
 /* Timer */
 .timer-bar-wrap {
   background: #1e293b;

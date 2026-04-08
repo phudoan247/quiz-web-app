@@ -144,6 +144,15 @@ function renderAnswers(q) {
   });
 }
 
+function updateProgressBar() {
+  const total = state.questions.length;
+  const current = state.currentIndex + 1;
+  const pct = (current / total) * 100;
+  document.getElementById("progress-bar").style.width = `${pct}%`;
+  document.getElementById("progress-label").textContent =
+    `${current} / ${total}`;
+}
+
 function renderQuestion() {
   const q = state.questions[state.currentIndex];
   const total = state.questions.length;
@@ -152,6 +161,7 @@ function renderQuestion() {
     `Question ${state.currentIndex + 1} / ${total}`;
   updateScoreDisplay();
   updateStreakDisplay();
+  updateProgressBar();
   document.getElementById("question-text").textContent = q.question;
   renderAnswers(q);
   startTimer();
