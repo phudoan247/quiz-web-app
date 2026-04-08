@@ -1,15 +1,24 @@
+const CONFIG = {
+  TIMER_SECONDS: 15,
+  POINTS_PER_QUESTION: 10,
+};
+
 const state = {
   questions: [],
   currentIndex: 0,
   score: 0,
   correctCount: 0,
   startTime: null,
+  timerInterval: null,
+  timeLeft: CONFIG.TIMER_SECONDS,
 };
 
 // Screen management
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  document
+    .querySelectorAll(".screen")
+    .forEach((s) => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
 
 // Shuffle array (Fisher-Yates)
@@ -28,60 +37,104 @@ function startQuiz() {
   state.score = 0;
   state.correctCount = 0;
   state.startTime = Date.now();
-  showScreen('quiz-screen');
+  showScreen("quiz-screen");
   renderQuestion();
 }
 
+function startTimer() {
+  clearTimer();
+  state.timeLeft = CONFIG.TIMER_SECONDS;
+  updateTimerDisplay();
+
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+    updateTimerDisplay();
+    if (state.timeLeft <= 0) {
+      clearTimer();
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function clearTimer() {
+  if (state.timerInterval) {
+    clearInterval(state.timerInterval);
+    state.timerInterval = null;
+  }
+}
+
+function updateTimerDisplay() {
+  const pct = (state.timeLeft / CONFIG.TIMER_SECONDS) * 100;
+  const bar = document.getElementById("timer-bar");
+  bar.style.width = `${pct}%`;
+  bar.className =
+    "timer-bar" + (pct <= 33 ? " danger" : pct <= 60 ? " warning" : "");
+  document.getElementById("timer-label").textContent = state.timeLeft;
+}
+
+function handleTimeout() {
+  const buttons = document.querySelectorAll(".answer-btn");
+  buttons.forEach((btn) => (btn.disabled = true));
+  const q = state.questions[state.currentIndex];
+  buttons[q.correct].classList.add("correct");
+  setTimeout(nextQuestion, 900);
+}
+
 function updateScoreDisplay() {
-  document.getElementById('score-display').textContent = `Score: ${state.score}`;
+  document.getElementById("score-display").textContent =
+    `Score: ${state.score}`;
 }
 
 function showScorePopup(text) {
-  const popup = document.getElementById('score-popup');
+  const popup = document.getElementById("score-popup");
   popup.textContent = text;
-  popup.classList.add('visible');
-  setTimeout(() => popup.classList.remove('visible'), 700);
+  popup.classList.add("visible");
+  setTimeout(() => popup.classList.remove("visible"), 700);
+}
+
+function renderAnswers(q) {
+  const grid = document.getElementById("answers-grid");
+  grid.innerHTML = "";
+  q.answers.forEach((answer, i) => {
+    const btn = document.createElement("button");
+    btn.className = "answer-btn";
+    btn.textContent = answer;
+    btn.addEventListener("click", () => handleAnswer(i));
+    grid.appendChild(btn);
+  });
 }
 
 function renderQuestion() {
   const q = state.questions[state.currentIndex];
   const total = state.questions.length;
 
-  document.getElementById('question-counter').textContent =
+  document.getElementById("question-counter").textContent =
     `Question ${state.currentIndex + 1} / ${total}`;
   updateScoreDisplay();
-  document.getElementById('question-text').textContent = q.question;
-
-  const grid = document.getElementById('answers-grid');
-  grid.innerHTML = '';
-
-  q.answers.forEach((answer, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'answer-btn';
-    btn.textContent = answer;
-    btn.addEventListener('click', () => handleAnswer(i));
-    grid.appendChild(btn);
-  });
+  document.getElementById("question-text").textContent = q.question;
+  renderAnswers(q);
+  startTimer();
 }
 
 function handleAnswer(selectedIndex) {
+  clearTimer();
   const q = state.questions[state.currentIndex];
-  const buttons = document.querySelectorAll('.answer-btn');
+  const buttons = document.querySelectorAll(".answer-btn");
 
   // Disable all buttons after selection
-  buttons.forEach(btn => btn.disabled = true);
+  buttons.forEach((btn) => (btn.disabled = true));
 
   const isCorrect = selectedIndex === q.correct;
 
   // Highlight correct and wrong
-  buttons[q.correct].classList.add('correct');
+  buttons[q.correct].classList.add("correct");
   if (!isCorrect) {
-    buttons[selectedIndex].classList.add('wrong');
+    buttons[selectedIndex].classList.add("wrong");
   } else {
-    state.score += 10;
+    state.score += CONFIG.POINTS_PER_QUESTION;
     state.correctCount++;
     updateScoreDisplay();
-    showScorePopup('+10');
+    showScorePopup(`+${CONFIG.POINTS_PER_QUESTION}`);
   }
 
   // Advance after short delay
@@ -99,15 +152,22 @@ function nextQuestion() {
 
 function showResults() {
   const elapsed = Math.round((Date.now() - state.startTime) / 1000);
-  const accuracy = Math.round((state.correctCount / state.questions.length) * 100);
+  const accuracy = Math.round(
+    (state.correctCount / state.questions.length) * 100,
+  );
 
-  document.getElementById('final-score').textContent = state.score;
-  document.getElementById('final-accuracy').textContent = `${accuracy}%`;
-  document.getElementById('final-time').textContent = `${elapsed}s`;
+  document.getElementById("final-score").textContent = state.score;
+  document.getElementById("final-accuracy").textContent = `${accuracy}%`;
+  document.getElementById("final-time").textContent = `${elapsed}s`;
 
-  showScreen('results-screen');
+  showScreen("results-screen");
 }
 
-// Event listeners
-document.getElementById('start-btn').addEventListener('click', startQuiz);
-document.getElementById('play-again-btn').addEventListener('click', startQuiz);
+function init() {
+  document.getElementById("start-btn").addEventListener("click", startQuiz);
+  document
+    .getElementById("play-again-btn")
+    .addEventListener("click", startQuiz);
+}
+
+init();

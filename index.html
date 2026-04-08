@@ -1,60 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz Arena</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <!-- Start Screen -->
-  <div id="start-screen" class="screen active">
-    <div class="card">
-      <h1>Quiz Arena</h1>
-      <p class="subtitle">Test your knowledge!</p>
-      <button id="start-btn" class="btn btn-primary">Start Quiz</button>
-    </div>
-  </div>
-
-  <!-- Quiz Screen -->
-  <div id="quiz-screen" class="screen">
-    <div class="quiz-header">
-      <span id="question-counter">Question 1 / 10</span>
-      <div class="score-wrapper">
-        <span id="score-display">Score: 0</span>
-        <span id="score-popup" class="score-popup"></span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Arena</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+      <div class="card">
+        <h1>Quiz Arena</h1>
+        <p class="subtitle">Test your knowledge!</p>
+        <button id="start-btn" class="btn btn-primary">Start Quiz</button>
       </div>
     </div>
 
-    <div class="card">
-      <p id="question-text" class="question-text"></p>
-      <div id="answers-grid" class="answers-grid"></div>
-    </div>
-  </div>
-
-  <!-- Results Screen -->
-  <div id="results-screen" class="screen">
-    <div class="card">
-      <h2>Quiz Complete!</h2>
-      <div class="results-stats">
-        <div class="stat">
-          <span class="stat-value" id="final-score">0</span>
-          <span class="stat-label">Score</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value" id="final-accuracy">0%</span>
-          <span class="stat-label">Accuracy</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value" id="final-time">0s</span>
-          <span class="stat-label">Time Taken</span>
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="screen">
+      <div class="quiz-header">
+        <span id="question-counter">Question 1 / 10</span>
+        <div class="score-wrapper">
+          <span id="score-display">Score: 0</span>
+          <span id="score-popup" class="score-popup"></span>
         </div>
       </div>
-      <button id="play-again-btn" class="btn btn-primary">Play Again</button>
-    </div>
-  </div>
 
-  <script src="questions.js"></script>
-  <script src="app.js"></script>
-</body>
+      <div class="timer-bar-wrap">
+        <div id="timer-bar" class="timer-bar"></div>
+      </div>
+      <div id="timer-label" class="timer-label">15</div>
+
+      <div class="card">
+        <p id="question-text" class="question-text"></p>
+        <div id="answers-grid" class="answers-grid"></div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="screen">
+      <div class="card">
+        <h2>Quiz Complete!</h2>
+        <div class="results-stats">
+          <div class="stat">
+            <span class="stat-value" id="final-score">0</span>
+            <span class="stat-label">Score</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="final-accuracy">0%</span>
+            <span class="stat-label">Accuracy</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="final-time">0s</span>
+            <span class="stat-label">Time Taken</span>
+          </div>
+        </div>
+        <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+      </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>
