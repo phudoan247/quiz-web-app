@@ -1,3 +1,9 @@
+const DIFFICULTY = {
+  easy: { seconds: 20, label: "🟢 Easy" },
+  medium: { seconds: 15, label: "🟡 Medium" },
+  hard: { seconds: 10, label: "🔴 Hard" },
+};
+
 const CONFIG = {
   TIMER_SECONDS: 15,
   POINTS_PER_QUESTION: 10,
@@ -11,6 +17,7 @@ const state = {
   score: 0,
   correctCount: 0,
   streak: 0,
+  difficulty: "easy",
   startTime: null,
   timerInterval: null,
   timeLeft: CONFIG.TIMER_SECONDS,
@@ -34,6 +41,10 @@ function shuffle(arr) {
   return a;
 }
 
+function getTimerSeconds() {
+  return DIFFICULTY[state.difficulty].seconds;
+}
+
 function startQuiz() {
   state.questions = shuffle(QUESTIONS);
   state.currentIndex = 0;
@@ -41,6 +52,8 @@ function startQuiz() {
   state.correctCount = 0;
   state.streak = 0;
   state.startTime = Date.now();
+  document.getElementById("difficulty-badge").textContent =
+    DIFFICULTY[state.difficulty].label;
   showScreen("quiz-screen");
   renderQuestion();
 }
@@ -68,7 +81,7 @@ function updateStreakDisplay() {
 
 function startTimer() {
   clearTimer();
-  state.timeLeft = CONFIG.TIMER_SECONDS;
+  state.timeLeft = getTimerSeconds();
   updateTimerDisplay();
 
   state.timerInterval = setInterval(() => {
@@ -89,7 +102,7 @@ function clearTimer() {
 }
 
 function updateTimerDisplay() {
-  const pct = (state.timeLeft / CONFIG.TIMER_SECONDS) * 100;
+  const pct = (state.timeLeft / getTimerSeconds()) * 100;
   const bar = document.getElementById("timer-bar");
   bar.style.width = `${pct}%`;
   bar.className =
@@ -274,10 +287,20 @@ function showResults() {
 }
 
 function init() {
+  document.querySelectorAll(".btn-difficulty").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document
+        .querySelectorAll(".btn-difficulty")
+        .forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      state.difficulty = btn.dataset.difficulty;
+    });
+  });
+
   document.getElementById("start-btn").addEventListener("click", startQuiz);
   document
     .getElementById("play-again-btn")
-    .addEventListener("click", startQuiz);
+    .addEventListener("click", () => showScreen("start-screen"));
 }
 
 init();

@@ -12,6 +12,20 @@
       <div class="card">
         <h1>Quiz Arena</h1>
         <p class="subtitle">Test your knowledge!</p>
+        <div class="difficulty-picker">
+          <p class="difficulty-label">Choose difficulty</p>
+          <div class="difficulty-btns">
+            <button class="btn btn-difficulty active" data-difficulty="easy">
+              🟢 Easy<span class="diff-time">20s</span>
+            </button>
+            <button class="btn btn-difficulty" data-difficulty="medium">
+              🟡 Medium<span class="diff-time">15s</span>
+            </button>
+            <button class="btn btn-difficulty" data-difficulty="hard">
+              🔴 Hard<span class="diff-time">10s</span>
+            </button>
+          </div>
+        </div>
         <button id="start-btn" class="btn btn-primary">Start Quiz</button>
       </div>
     </div>
@@ -20,6 +34,7 @@
     <div id="quiz-screen" class="screen">
       <div class="quiz-header">
         <span id="question-counter">Question 1 / 10</span>
+        <span id="difficulty-badge" class="difficulty-badge"></span>
         <div class="score-wrapper">
           <span id="score-display">Score: 0</span>
           <span id="score-popup" class="score-popup"></span>

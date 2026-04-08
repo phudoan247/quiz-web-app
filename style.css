@@ -58,6 +58,67 @@ h1 {
   font-size: 1.1rem;
 }
 
+/* Difficulty picker */
+.difficulty-label {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.difficulty-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-difficulty {
+  flex: 1;
+  background: #0f172a;
+  border: 2px solid #334155;
+  border-radius: 0.75rem;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.6rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.btn-difficulty.active {
+  border-color: #a855f7;
+  color: #f1f5f9;
+}
+
+.btn-difficulty:hover:not(.active) {
+  border-color: #475569;
+  color: #cbd5e1;
+}
+
+.diff-time {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.btn-difficulty.active .diff-time {
+  color: #a855f7;
+}
+
+/* Difficulty badge in quiz header */
+.difficulty-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
 /* Streak badge */
 .streak-badge {
   font-size: 0.85rem;

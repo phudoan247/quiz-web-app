@@ -15,7 +15,7 @@
 
 ## Config
 
-All game settings live in a `CONFIG` object at the top of app.js:
+Difficulty levels live in a `DIFFICULTY` object (easy/medium/hard), each with `seconds` and `label`. All other game settings live in a `CONFIG` object at the top of app.js:
 
 - `TIMER_SECONDS` — countdown per question (default 15)
 - `POINTS_PER_QUESTION` — base points (default 10)
