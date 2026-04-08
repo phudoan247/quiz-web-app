@@ -18,8 +18,6 @@
 All game settings live in a `CONFIG` object at the top of app.js:
 
 - `TIMER_SECONDS` — countdown per question (default 15)
-- `STREAK_2X` — correct answers needed for 2x bonus (default 3)
-- `STREAK_3X` — correct answers needed for 3x bonus (default 5)
 - `POINTS_PER_QUESTION` — base points (default 10)
 
 ## Coding Conventions

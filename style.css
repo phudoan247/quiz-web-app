@@ -223,6 +223,12 @@ h2 {
   text-align: center;
 }
 
+.result-emoji {
+  font-size: 3rem;
+  text-align: center;
+  line-height: 1;
+}
+
 .results-stats {
   display: flex;
   justify-content: space-around;
@@ -247,6 +253,43 @@ h2 {
   color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.results-breakdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: #0f172a;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.breakdown-item {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.breakdown-item span {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.correct-item {
+  color: #22c55e;
+}
+
+.wrong-item {
+  color: #ef4444;
+}
+
+.breakdown-divider {
+  width: 1px;
+  height: 2rem;
+  background: #334155;
 }
 
 /* Responsive */

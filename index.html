@@ -40,7 +40,9 @@
     <!-- Results Screen -->
     <div id="results-screen" class="screen">
       <div class="card">
-        <h2>Quiz Complete!</h2>
+        <div id="result-emoji" class="result-emoji">🎉</div>
+        <h2 id="result-message">Quiz Complete!</h2>
+
         <div class="results-stats">
           <div class="stat">
             <span class="stat-value" id="final-score">0</span>
@@ -55,6 +57,17 @@
             <span class="stat-label">Time Taken</span>
           </div>
         </div>
+
+        <div class="results-breakdown">
+          <div class="breakdown-item correct-item">
+            <span id="correct-count">0</span> Correct
+          </div>
+          <div class="breakdown-divider"></div>
+          <div class="breakdown-item wrong-item">
+            <span id="wrong-count">0</span> Wrong
+          </div>
+        </div>
+
         <button id="play-again-btn" class="btn btn-primary">Play Again</button>
       </div>
     </div>
