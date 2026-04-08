@@ -1,11 +1,13 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   background: #0f172a;
   color: #f1f5f9;
   min-height: 100vh;
@@ -88,7 +90,9 @@ h1 {
   font-size: 1rem;
   opacity: 0;
   transform: translateY(0);
-  transition: opacity 0.15s, transform 0.6s;
+  transition:
+    opacity 0.15s,
+    transform 0.6s;
   pointer-events: none;
   white-space: nowrap;
 }
@@ -96,6 +100,41 @@ h1 {
 .score-popup.visible {
   opacity: 1;
   transform: translateY(-0.5rem);
+}
+
+/* Timer */
+.timer-bar-wrap {
+  background: #1e293b;
+  border-radius: 9999px;
+  height: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.timer-bar {
+  height: 100%;
+  background: #6366f1;
+  border-radius: 9999px;
+  transition:
+    width 1s linear,
+    background 0.3s;
+  width: 100%;
+}
+
+.timer-bar.warning {
+  background: #f59e0b;
+}
+
+.timer-bar.danger {
+  background: #ef4444;
+}
+
+.timer-label {
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-top: 0.25rem;
 }
 
 /* Question */
@@ -123,7 +162,9 @@ h1 {
   font-weight: 500;
   padding: 1rem 0.75rem;
   text-align: left;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
   line-height: 1.4;
 }
 
@@ -156,7 +197,9 @@ h1 {
   font-size: 1rem;
   font-weight: 700;
   padding: 0.875rem 2rem;
-  transition: opacity 0.15s, transform 0.1s;
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
 }
 
 .btn:active {
