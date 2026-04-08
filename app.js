@@ -92,6 +92,18 @@ function showScorePopup(text) {
   setTimeout(() => popup.classList.remove("visible"), 700);
 }
 
+function renderAnswers(q) {
+  const grid = document.getElementById("answers-grid");
+  grid.innerHTML = "";
+  q.answers.forEach((answer, i) => {
+    const btn = document.createElement("button");
+    btn.className = "answer-btn";
+    btn.textContent = answer;
+    btn.addEventListener("click", () => handleAnswer(i));
+    grid.appendChild(btn);
+  });
+}
+
 function renderQuestion() {
   const q = state.questions[state.currentIndex];
   const total = state.questions.length;
@@ -100,18 +112,7 @@ function renderQuestion() {
     `Question ${state.currentIndex + 1} / ${total}`;
   updateScoreDisplay();
   document.getElementById("question-text").textContent = q.question;
-
-  const grid = document.getElementById("answers-grid");
-  grid.innerHTML = "";
-
-  q.answers.forEach((answer, i) => {
-    const btn = document.createElement("button");
-    btn.className = "answer-btn";
-    btn.textContent = answer;
-    btn.addEventListener("click", () => handleAnswer(i));
-    grid.appendChild(btn);
-  });
-
+  renderAnswers(q);
   startTimer();
 }
 
@@ -162,6 +163,11 @@ function showResults() {
   showScreen("results-screen");
 }
 
-// Event listeners
-document.getElementById("start-btn").addEventListener("click", startQuiz);
-document.getElementById("play-again-btn").addEventListener("click", startQuiz);
+function init() {
+  document.getElementById("start-btn").addEventListener("click", startQuiz);
+  document
+    .getElementById("play-again-btn")
+    .addEventListener("click", startQuiz);
+}
+
+init();
